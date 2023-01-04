@@ -1,0 +1,138 @@
+---
+title: "Abgabe Blatt 10"
+author: 
+- "Leonardo Giannotti - Immatrikulationsnummer: 12635009"
+- "Tala Mansour - Immatrikulationsnummer: 12635009"
+output: 
+  html_document: 
+    highlight: tango
+    theme: flatly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Aufgabe 1)
+
+```{r}
+urliste <- c(3300, 9000, 2700, 6500, 3600, 1500, 1000, 1500, 1000, 2100, 1800, 2800,
+             1800, 4600, 3200, 2700)
+```
+
+#### 1a) \
+#### *Geben Sie das arithmetische Mittel sowie den Median und die beiden Quartile an.*
+**Das arithmetische Mittel**: \
+Das arithetische Mittel erhalten wir durch den Befehl **mean**.
+```{r}
+arith_mit <- mean(urliste)
+arith_mit
+```
+**Der Median:**\
+Den Median erhalten wir durch den Befehl **median**.
+```{r}
+median <- median(urliste)
+median
+```
+Allerdings müssten wir, wenn wir den Median händisch berechnen wollen, alle Datenpunkte der Größe nach sortieren und anschließend den mittleren Wert berechnen oder ausfindig machen.
+```{r}
+sort_urliste <- sort(urliste)
+sort_urliste
+```
+Nun haben wir die Daten sortiert und können über den **quantile**-Befehl den Median berechnen:
+```{r}
+quantile(sort_urliste, c(0.5))
+```
+Oder händisch:
+```{r}
+(sort_urliste[8] + sort_urliste[9]) / 2
+```
+
+
+
+**Quartile:**\
+Die Quartile erhalten wir durch den Befehl **quantile**. Allerdings müssen wir hier spzeifizieren, welche Quantile bzw. Quartile wir erhalten wollen.
+```{r}
+quantile(urliste, c(0.25, 0.75))
+```
+#### 1b)
+#### *Zeichnen Sie den modifizierten Boxplot.*
+Hierfür benutzten wir den Befehl **boxplot**.
+```{r}
+boxplot(urliste, ylab = "Gehälter in Urliste", main = "Boxplot der Urliste")
+```
+
+#### 1c)
+#### *Zeichnen Sie die empirische Verteilungsfunktion.*
+```{r}
+
+```
+
+#### 1d)
+#### *Beschreiben Sie kurz die Charakteristika dieser Verteilung mit den in der Vorlesung eingef̈uhrten Begriffen.*
+```{r}
+
+```
+
+### Aufgabe 2)
+```{r}
+urliste2 <- c(204,221,195,191,205,220,194,225,185,188,229,
+              231,222,239,225,194,211,222,199)
+```
+#### 2a) \
+**Berechnen Sie die Fünf-Punkte-Zusammenfassung und die Zäune des Boxplots und zeichnen Sie den modifizierten Boxplot.** \
+Die 'Fünf-Punkte-Zusammenfassung' besteht aus:
+
+  * Minimum
+  * 1.Quartil
+  * Median
+  * 3.Quartil
+  * Maximum
+  
+```{r, results='hold'}
+#Minimum:
+min_u2 <- min(urliste2)
+cat("Minimum: \n")
+print(min_u2)
+
+#1. Quartil:
+q1_u2 <- quantile(urliste2, 0.25)
+cat("\n 1. Quartil: \n")
+print(q1_u2)
+
+#Median:
+med_u2 <- median(urliste2)
+cat("\n Median: \n")
+print(med_u2)
+
+#3. Quartil:
+q3_u2 <- quantile(urliste2, 0.75)
+cat("\n 3. Quartil: \n")
+print(q3_u2)
+
+#Maximum:
+max_u2 <- max(urliste2)
+cat("\n Maximum: \n")
+print(max_u2)
+```
+Nun können wir die Zäune $z_{u}$ und $z_{o}$ berechnen. Hierfür benötigen wir den Interquartilsabstand, denn:
+$$z_{u} = x_{0.25} - 1.5*IQR$$
+$$z_{o} = x_{0.25} + 1.5*IQR$$
+```{r, results='hold'}
+iqr <- IQR(urliste2)
+
+z_u <- 194.5 - (1.5 * iqr)
+cat("Zaun unten: \n")
+print(z_u)
+
+z_o <- 223.5 + (1.5 * iqr)
+cat("\n Zaun oben: \n")
+print(z_o)
+```
+Da $min(urliste2)$ und $max(urliste2)$ in dem Intervall der beiden Zäune liegen $[151, 267]$, befinden sich die Zäune bei den Werten $min(urliste2)$ und $max(urliste2)$.
+
+```{r}
+boxplot(urliste2, main = "Boxplot der Urliste 2.", ylab = "Gewicht in (kg)")
+```
+
+
