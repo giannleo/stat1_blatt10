@@ -2,7 +2,7 @@
 title: "Abgabe Blatt 10"
 author: 
 - "Leonardo Giannotti - Immatrikulationsnummer: 12635009"
-- "Tala Mansour - Immatrikulationsnummer: 12635009"
+- "Tala Mansour - Immatrikulationsnummer: 12541634"
 output: 
   html_document: 
     highlight: tango
@@ -12,6 +12,12 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+Packages, die in diesem Blatt benutzt wurden:
+```{r}
+library(qboxplot)
+```
+
+Dieses Package wurde benutzt, da qboxplot einen "Quantil-genauen" Algorithmus für die Erstellung eines Boxplots verwendet. 
 
 ### Aufgabe 1)
 
@@ -23,12 +29,19 @@ urliste <- c(3300, 9000, 2700, 6500, 3600, 1500, 1000, 1500, 1000, 2100, 1800, 2
 #### 1a) \
 #### *Geben Sie das arithmetische Mittel sowie den Median und die beiden Quartile an.*
 **Das arithmetische Mittel**: \
+Formel des arithmetischen Mittels:
+$$\overline{x} = \frac{1}{n} \sum_{i = 1}^{n} x_i$$
 Das arithetische Mittel erhalten wir durch den Befehl **mean**.
 ```{r}
 arith_mit <- mean(urliste)
 arith_mit
 ```
 **Der Median:**\
+Der Median ist der mittlere Wert der geordneten Daten:\
+Falls $k = \frac{n+1}{2}$ eine ganze Zahl ist:
+$$x_{med} = x_{k}$$
+Falls $k = \frac{n}{2}$ eine ganze Zahl ist:
+$$x_{med} = \frac{1}{2}(x_{k} + x_{k+1})$$
 Den Median erhalten wir durch den Befehl **median**.
 ```{r}
 median <- median(urliste)
@@ -41,7 +54,7 @@ sort_urliste
 ```
 Nun haben wir die Daten sortiert und können über den **quantile**-Befehl den Median berechnen:
 ```{r}
-quantile(sort_urliste, c(0.5))
+quantile(sort_urliste, c(0.5), type = 2)
 ```
 Oder händisch:
 ```{r}
@@ -53,25 +66,27 @@ Oder händisch:
 **Quartile:**\
 Die Quartile erhalten wir durch den Befehl **quantile**. Allerdings müssen wir hier spzeifizieren, welche Quantile bzw. Quartile wir erhalten wollen.
 ```{r}
-quantile(urliste, c(0.25, 0.75))
+quantile(urliste, c(0.25, 0.75), type = 2)
 ```
 #### 1b)
 #### *Zeichnen Sie den modifizierten Boxplot.*
-Hierfür benutzten wir den Befehl **boxplot**.
-```{r}
-boxplot(urliste, ylab = "Gehälter in Urliste", main = "Boxplot der Urliste")
+Hierfür benutzten wir den Befehl **qboxplot** aus dem package *qboxplot*.
+```{r, fig.align='center'}
+qboxplot(as.data.frame(urliste), xlab = "Gehälter in Urliste", main = "Boxplot der Urliste", type = 2, horizontal = TRUE)
 ```
 
 #### 1c)
 #### *Zeichnen Sie die empirische Verteilungsfunktion.*
-```{r}
+Die empirische Verteilungsfunktion erhalten wir in R über den Befehl **ecdf**. Anschließend können wir die Verteilung mit dem Befehl **plot** auch plotten:
+```{r, fig.align='center'}
+ecdf_urliste <- ecdf(urliste)
+plot(ecdf_urliste, main = "Empirische Verteilungsfunktion von Urliste")
 ```
 
 #### 1d)
 #### *Beschreiben Sie kurz die Charakteristika dieser Verteilung mit den in der Vorlesung eingef̈uhrten Begriffen.*
-```{r}
+Der empirischen Verteilungsfunktion kann man entnehmen, dass die Verteilung **linkssteil** ist, da sie bei niedrigen x-Werten relativ schnell ansteigt.
 
-```
 
 ### Aufgabe 2)
 ```{r}
@@ -95,7 +110,7 @@ cat("Minimum: \n")
 print(min_u2)
 
 #1. Quartil:
-q1_u2 <- quantile(urliste2, 0.25)
+q1_u2 <- quantile(urliste2, 0.25, type = 2)
 cat("\n 1. Quartil: \n")
 print(q1_u2)
 
@@ -105,12 +120,12 @@ cat("\n Median: \n")
 print(med_u2)
 
 #3. Quartil:
-q3_u2 <- quantile(urliste2, 0.75)
+q3_u2 <- quantile(urliste2, 0.75, type = 2)
 cat("\n 3. Quartil: \n")
 print(q3_u2)
 
 #Maximum:
-max_u2 <- max(urliste2)
+max_u2 <- max(urliste2, type = 2)
 cat("\n Maximum: \n")
 print(max_u2)
 ```
@@ -120,38 +135,29 @@ $$z_{o} = x_{0.75} + 1.5*IQR$$
 Um in R den Interquartilsabstand zu berechnen, benutzt man den Befehl **IQR**. \
 Anschließend können wir über simple Mathe-Syntax die Berechnungen durchführen.
 ```{r, results='hold'}
-iqr <- IQR(urliste2)
+iqr <- 225  - 194
 
-z_u <- 194.5 - (1.5 * iqr)
+z_u <- 194 - (1.5 * iqr)
 cat("Zaun unten: \n")
 print(z_u)
 
-z_o <- 223.5 + (1.5 * iqr)
+z_o <- 225 + (1.5 * iqr)
 cat("\n Zaun oben: \n")
 print(z_o)
 ```
-Da $min(urliste2)$ und $max(urliste2)$ in dem Intervall der beiden Zäune liegen $[151, 267]$, befinden sich die Zäune bei den Werten $min(urliste2)$ und $max(urliste2)$.
+Da $min(urliste2)$ und $max(urliste2)$ in dem Intervall der beiden Zäune liegen $[147.5, 271.5]$, befinden sich die Zäune bei den Werten $min(urliste2)$ und $max(urliste2)$.
 
-```{r}
-boxplot(urliste2, main = "Boxplot der Urliste 2.", ylab = "Gewicht in (kg)")
+```{r, fig.align='center'}
+qboxplot(as.data.frame(urliste2), main = "Boxplot der Urliste 2.", 
+         xlab = "Gewicht in (kg)", horizontal = TRUE)
 ```
-
 
 #### 2b)
-Um diese Frage zu beantworten, ist es sinnvoll die Daten zu visualisieren.
-```{r, results='hold'}
-dotchart(urliste2, main = "Dotchart von Urliste 2.", xlab = "Gewicht in (kg)")
-abline(v = mean(urliste2), col = "red")
+Um diese Frage zu beantworten, ist es sinnvoll die Daten zu visualisieren - beispielsweise mit einem Kerneldensity-Estimator (Befehl: **density**):
+```{r, fig.align='center'}
+plot(density(urliste2), main = "Density Estimator of Urliste 2.")
 ```
- \
-Dem Plot kann man entnehmen, dass die Daten sehr streuen - sprich die Standardabweichung bzw. Varianz groß ist. \
-Die Daten scheinen fast achsensymmetrisch zu dem rot gekennzeichneten Mittelwert zu streuen.
-
-```{r ,results='hold'}
-cat("Standardabweichung:\n")
-print(sd(urliste2))
-```
-Die starke Streuung kann man dem Boxplot nur bedingt entnehmen (über die Länge der Box annähern). Richtig sichtbar wird diese erst bei dem oben gezeichneten Scatterplot.
+Dem Plot kann man entnehmen, dass die Daten multimodal verteilt sind. Diese Information konnte man dem Boxplot so nicht entnehmen. 
 
 #### 2c)
 Hierfür werden wir die Urliste 2. sortieren. Dies mal über den **order** Befehl, da wir vorhaben mit Indizes zu arbeiten.
@@ -165,6 +171,8 @@ Nun werden wir die leichtesten 5 Schweine um 2 kg schwerer machen. \
 Hierfür programmieren wir eine kleine **for-Schleife**, mit der wir auf eine besonders effiziente Art und Weise die ersten 5 Indizes manipulieren können.
 
 ```{r}
+# Wir lassen die Schleife bis 5 laufen und greifen darüber auf die ersten 5 Indizes zu
+# und überschreiben diese dann mit dem originalen Wert bloß 2kg schwerer.
 for(x in seq(1,5)){
   urliste2[x] <- urliste2[x] + 2 
 }
@@ -175,12 +183,12 @@ urliste2
 Nun werden wir uns die Quartile erneut anschauen:
 ```{r, results = 'hold'}
 cat("1. Quartil: \n")
-print(quantile(urliste2, 0.25))
+print(quantile(urliste2, 0.25), type = 2)
 
 cat("\n 3. Quartil: \n")
-print(quantile(urliste2, 0.75))
+print(quantile(urliste2, 0.75), type = 2)
 ```
-Nur das 1. Quartil verändert sich um den Wert $1.5$. Das dritte Quartil bleibt gleicht.
+Nur das 1. Quartil verändert sich und wird um $1.5$ kleiner. Das dritte Quartil bleibt gleicht.\
 Dies ergibt Sinn, da wir nur die 'unteren' Daten verändert haben.
 
 
